@@ -1,7 +1,7 @@
 import { ThemeProvider, CssBaseline, Box, Container } from "@mui/material";
 import HeroSection from "./components/HeroSection";
 import WorkbenchLayout from "./components/layout/WorkbenchLayout";
-import { penguinTheme } from "c:/Users/user/Desktop/compliance_table_frontend/src/theme/penguinTheme";
+import { penguinTheme } from "./theme/penguinTheme";
 
 function App() {
   return (
