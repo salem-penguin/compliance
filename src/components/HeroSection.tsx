@@ -21,7 +21,7 @@ const HeroSection = () => {
     >
       <Chip
         label="Penguin • Pen Lab"
-        color="secondary"
+        color= "primary"
         variant="outlined"
         sx={{ mb: 2, fontWeight: 500 }}
       />
