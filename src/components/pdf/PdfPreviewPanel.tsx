@@ -184,7 +184,7 @@ console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
         minHeight: 600,
         display: "flex",
         flexDirection: "column",
-        bgcolor: "#F9FAFB",
+        color: "primary",
       }}
     >
       {/* Header */}
