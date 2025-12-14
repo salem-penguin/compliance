@@ -13,7 +13,6 @@ interface PdfPreviewPanelProps {
   workbench: WorkbenchStateAPI;
 }
 
-
 const PdfPreviewPanel = ({ workbench }: PdfPreviewPanelProps) => {
   const { state } = workbench;
   const { pdfUrl, selectedRow } = state;
@@ -28,14 +27,12 @@ const PdfPreviewPanel = ({ workbench }: PdfPreviewPanelProps) => {
   const pdfDocRef = useRef<any>(null);
   const renderTaskRef = useRef<any>(null);
 
-  // Update pageNumber when selectedRow changes
   useEffect(() => {
     if (selectedRow?.pageNumber) {
       setPageNumber(selectedRow.pageNumber);
     }
   }, [selectedRow]);
 
-  // Load PDF when pdfUrl changes
   useEffect(() => {
     if (!pdfUrl) {
       pdfDocRef.current = null;
@@ -49,7 +46,6 @@ const PdfPreviewPanel = ({ workbench }: PdfPreviewPanelProps) => {
     setError(null);
 
     const loadPdfJs = async () => {
-      // Load pdf.js if not already loaded
       if (!(window as any).pdfjsLib) {
         const script = document.createElement("script");
         script.src =
@@ -77,7 +73,7 @@ const PdfPreviewPanel = ({ workbench }: PdfPreviewPanelProps) => {
         if (!pdf || cancelled) return;
         pdfDocRef.current = pdf;
         setNumPages(pdf.numPages || 0);
-        setPageNumber(1); // reset to first page on new PDF
+        setPageNumber(1);
         setLoading(false);
       })
       .catch((err: any) => {
@@ -97,7 +93,6 @@ const PdfPreviewPanel = ({ workbench }: PdfPreviewPanelProps) => {
     };
   }, [pdfUrl]);
 
-  // Render current page whenever pageNumber or scale changes
   useEffect(() => {
     const pdfDoc = pdfDocRef.current;
     const canvas = canvasRef.current;
@@ -105,13 +100,10 @@ const PdfPreviewPanel = ({ workbench }: PdfPreviewPanelProps) => {
 
     const renderPage = async () => {
       try {
-        // Cancel previous render if still running
         if (renderTaskRef.current) {
           try {
             renderTaskRef.current.cancel();
-          } catch {
-            // ignore
-          }
+          } catch {}
           renderTaskRef.current = null;
         }
 
@@ -120,13 +112,11 @@ const PdfPreviewPanel = ({ workbench }: PdfPreviewPanelProps) => {
         if (!context) return;
 
         const viewport = page.getViewport({ scale });
-
-        // Set canvas size according to viewport (this controls zoom)
         const outputScale = window.devicePixelRatio || 1;
+
         canvas.width = viewport.width * outputScale;
         canvas.height = viewport.height * outputScale;
 
-        // CSS size – don't force width: 100%, let the canvas grow
         canvas.style.width = `${viewport.width}px`;
         canvas.style.height = `${viewport.height}px`;
 
@@ -139,7 +129,6 @@ const PdfPreviewPanel = ({ workbench }: PdfPreviewPanelProps) => {
           transform,
         };
 
-        // Clear previous frame
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         const task = page.render(renderContext);
@@ -173,21 +162,21 @@ const PdfPreviewPanel = ({ workbench }: PdfPreviewPanelProps) => {
   const handleResetZoom = () => {
     setScale(1.0);
   };
-console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
+
+  console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
 
   return (
     <Paper
       sx={{
         p: 2.5,
         height: "100%",
-                  boxShadow : 15,
+        boxShadow: 15,
         minHeight: 600,
         display: "flex",
         flexDirection: "column",
         color: "primary",
       }}
     >
-      {/* Header */}
       <Box
         sx={{
           display: "flex",
@@ -236,6 +225,7 @@ console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
                 </IconButton>
               </span>
             </Tooltip>
+
             <Typography
               variant="body2"
               onClick={handleResetZoom}
@@ -253,6 +243,7 @@ console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
             >
               {Math.round(scale * 100)}%
             </Typography>
+
             <Tooltip title="Zoom In">
               <span>
                 <IconButton
@@ -281,7 +272,6 @@ console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
         )}
       </Box>
 
-      {/* Empty State */}
       {!pdfUrl && (
         <Box
           sx={{
@@ -337,7 +327,6 @@ console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
         </Box>
       )}
 
-      {/* PDF Viewer */}
       {pdfUrl && (
         <Box
           sx={{
@@ -347,27 +336,8 @@ console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
             gap: 1.5,
           }}
         >
-          {/* Selection Info Banner */}
-          {selectedRow && (
-            <Box
-              sx={{
-                px: 2,
-                py: 1.5,
-                borderRadius: 1.5,
-                bgcolor: "#EEF2FF",
-                border: "1px solid #C7D2FE",
-              }}
-            >
-              <Typography
-                variant="body2"
-                sx={{ fontWeight: 500, color: "#4338CA" }}
-              >
-                {/* Viewing: {selectedRow.outlineNumber || "Selected Requirement"} */}
-              </Typography>
-            </Box>
-          )}
+          {/* REMOVED BLUE RECTANGLE HERE */}
 
-          {/* PDF Container */}
           <Box
             sx={{
               flex: 1,
@@ -395,6 +365,7 @@ console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
                 <CircularProgress />
               </Box>
             )}
+
             {error && (
               <Box
                 sx={{
@@ -408,6 +379,7 @@ console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
                 <Typography>{error}</Typography>
               </Box>
             )}
+
             {!loading && !error && (
               <canvas
                 ref={canvasRef}
@@ -419,7 +391,6 @@ console.log("PdfPreviewPanel pdfUrl =", pdfUrl);
             )}
           </Box>
 
-          {/* Navigation Controls */}
           <Box
             sx={{
               display: "flex",

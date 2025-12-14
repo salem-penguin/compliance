@@ -380,7 +380,7 @@ export interface WorkbenchStateAPI {
   exportSelection: (rows: ComplianceRow[]) => Promise<void>;
 }
 
-const API_BASE = "http://localhost:8000"; // adjust if needed
+const API_BASE = "http://192.168.2.124:8000"; // adjust if needed
 
 export function useWorkbenchState(): WorkbenchStateAPI {
   const [rows, setRows] = useState<ComplianceRow[]>([]);
